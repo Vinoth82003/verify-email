@@ -87,7 +87,7 @@ function sendVerificationEmail(user) {
         // Replace placeholders with actual user data
         const emailBody = data
             .replace('<span class="username">username</span>', `<span class="username">${user.firstName} ${user.lastName}</span>`)
-            .replace('<a href="" class="verify-btn">Verify Email</a>', `<a href="http://127.0.0.1:5000/verify/${user._id}" class="verify-btn">Verify Email</a>`);
+            .replace('<a href="" class="verify-btn">Verify Email</a>', `<a href="https://verify-email.vercel.app/verify/${user._id}" class="verify-btn">Verify Email</a>`);
 
         // Send email with the customized HTML body
         const mailOptions = {
