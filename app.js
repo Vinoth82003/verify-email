@@ -32,6 +32,8 @@ const userSchema = new mongoose.Schema({
     emailSent: { type: Boolean, default: false } // New field to indicate whether email has been sent
 });
 
+const User = mongoose.model('User', userSchema);
+
 // Handle form submission
 app.post('/register', async (req, res) => {
     const existingUser = await User.findOne({ email: req.body.email });
