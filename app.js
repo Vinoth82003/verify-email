@@ -27,7 +27,7 @@ const db = mongoose.connection;
 const userSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
-    email: String,
+    email: { type: String, unique: true },
     password: String,
     isVerified: { type: Boolean, default: false },
     emailSent: { type: Boolean, default: false } // New field to indicate whether email has been sent
