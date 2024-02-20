@@ -8,7 +8,6 @@
   },
   "scripts": {
     "start": "node app.js",
-    "postinstall": "npm rebuild bcrypt",
     "preinstall": "npm install -g npm"
   },
   "dependencies": {
