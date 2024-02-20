@@ -7,10 +7,12 @@
     "node": "18.x"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "postinstall": "npm rebuild bcrypt"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "dotenv": "^16.4.4",
     "express": "^4.18.2",
@@ -18,4 +20,3 @@
     "nodemailer": "^6.9.9"
   }
 }
-
