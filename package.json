@@ -9,7 +9,6 @@
   "scripts": {
     "start": "node app.js",
     "postinstall": "npm rebuild bcrypt",
-    "preinstall": "npm config set cache /vercel/.npm --global",
     "preinstall": "npm install -g npm"
   },
   "dependencies": {
