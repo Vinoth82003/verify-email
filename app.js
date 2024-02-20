@@ -60,8 +60,8 @@ function sendVerificationEmail(user) {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'your-email@gmail.com',
-            pass: 'your-email-password'
+            user: '2021pecit223@gmail.com',
+            pass: 'ljeh zzlv fdmd efuz'
         }
     });
 
@@ -78,7 +78,7 @@ function sendVerificationEmail(user) {
             .replace('<a href="" class="verify-btn">Verify Email</a>', `<a href="https://your-app-url/verify/${user._id}" class="verify-btn">Verify Email</a>`);
 
         const mailOptions = {
-            from: 'your-email@gmail.com',
+            from: '2021pecit223@gmail.com',
             to: user.email,
             subject: 'Email Verification',
             html: emailBody
