@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const path = require('path'); // Import the path module
 const nodemailer = require('nodemailer');
 const fs = require('fs'); // Import the file system module
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 const app = express();
