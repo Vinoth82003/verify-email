@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const nodemailer = require('nodemailer');
 const fs = require('fs');
+const ejs = require('ejs');
 require('dotenv').config();
 
 const app = express();
@@ -34,7 +35,6 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// Handle form submission
 app.post('/register', async (req, res) => {
     const existingUser = await User.findOne({ email: req.body.email });
     if (existingUser) {
@@ -51,7 +51,15 @@ app.post('/register', async (req, res) => {
     try {
         const savedUser = await user.save();
         sendVerificationEmail(savedUser);
-        res.send('Registration successful. Please check your email for verification.');
+        // Render the registerSuccess.html file with the user's name
+        ejs.renderFile(path.join(__dirname, 'public', 'registerSuccess.html'), { name: req.body.fname }, (err, data) => {
+            if (err) {
+                console.error('Error rendering HTML:', err);
+                res.status(500).send('Internal Server Error');
+            } else {
+                res.send(data);
+            }
+        });
     } catch (error) {
         res.status(400).send(error);
     }
@@ -132,7 +140,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 async function fetchData() {
     try {
         const users = await User.find();
-        console.log('Fetched users:', users);
+        console.log('Fetched users:', users.length);
     } catch (error) {
         console.error('Error fetching data:', error);
     }
@@ -141,7 +149,7 @@ async function fetchData() {
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`http://127.0.0.1:${PORT}/`);
 });
 
 console.log("server");
