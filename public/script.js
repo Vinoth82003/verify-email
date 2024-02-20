@@ -1,39 +1,27 @@
-const mongoose = require('mongoose');
+const http = require('http');
 
-// Connect to MongoDB
-mongoose.connect('mongodb+srv://vinothg0618:vinoth112003@cluster0.fiy26nf.mongodb.net/myapp?retryWrites=true&w=majority')
-    .then(() => {
-        console.log('MongoDB connected successfully');
-        // After successful connection, proceed to fetch data
-        fetchData();
-    })
-    .catch((err) => {
-        console.error('Error connecting to MongoDB:', err);
+const options = {
+    hostname: 'https://vercel.com',
+    port: 80,
+    path: '/?format=json',
+    method: 'GET'
+};
+
+const req = http.request(options, (res) => {
+    let data = '';
+
+    res.on('data', (chunk) => {
+        data += chunk;
     });
 
-// Define a schema for the "users" collection
-const userSchema = new mongoose.Schema({
-    firstName: String,
-    lastName: String,
-    email: String,
-    password: String,
-    isVerified: { type: Boolean, default: false }, // Add a field for verification status
-    verificationToken: String // Add a field for storing verification token (e.g., user ID)
+    res.on('end', () => {
+        const ipInfo = JSON.parse(data);
+        console.log('Public IP address:', ipInfo.ip);
+    });
 });
 
-// Define a model based on the schema, specifying the "users" collection
-const User = mongoose.model('User', userSchema, 'users');
+req.on('error', (error) => {
+    console.error('Error getting public IP address:', error);
+});
 
-// Function to fetch data from the "users" collection
-async function fetchData() {
-    try {
-        // Find all documents in the "users" collection
-        const users = await User.find();
-        console.log('All users:', users);
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    } finally {
-        // Close the MongoDB connection
-        mongoose.connection.close();
-    }
-}
+req.end();

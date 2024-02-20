@@ -29,10 +29,8 @@ const userSchema = new mongoose.Schema({
     email: String,
     password: String,
     isVerified: { type: Boolean, default: false },
-    verificationToken: String
+    emailSent: { type: Boolean, default: false } // New field to indicate whether email has been sent
 });
-
-const User = mongoose.model('User', userSchema);
 
 // Handle form submission
 app.post('/register', async (req, res) => {
@@ -62,23 +60,25 @@ function sendVerificationEmail(user) {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: '2021pecit223@gmail.com',
-            pass: 'ljeh zzlv fdmd efuz'
+            user: 'your-email@gmail.com',
+            pass: 'your-email-password'
         }
     });
 
+    // Read the email template file
     fs.readFile(path.join(__dirname, 'public', 'emailTemplate.html'), 'utf8', (err, data) => {
         if (err) {
             console.error('Error reading email template:', err);
             return;
         }
 
+        // Replace placeholders with actual user data
         const emailBody = data
             .replace('<span class="username">username</span>', `<span class="username">${user.firstName} ${user.lastName}</span>`)
-            .replace('<a href="" class="verify-btn">Verify Email</a>', `<a href="https://verify-email.vercel.app/verify/${user._id}" class="verify-btn">Verify Email</a>`);
+            .replace('<a href="" class="verify-btn">Verify Email</a>', `<a href="https://your-app-url/verify/${user._id}" class="verify-btn">Verify Email</a>`);
 
         const mailOptions = {
-            from: '2021pecit223@gmail.com',
+            from: 'your-email@gmail.com',
             to: user.email,
             subject: 'Email Verification',
             html: emailBody
@@ -89,6 +89,12 @@ function sendVerificationEmail(user) {
                 console.log('Error sending email:', error);
             } else {
                 console.log('Email sent:', info.response);
+                // Update the user's emailSent field after sending the email
+                User.findByIdAndUpdate(user._id, { emailSent: true }, (err, doc) => {
+                    if (err) {
+                        console.error('Error updating emailSent field:', err);
+                    }
+                });
             }
         });
     });
@@ -106,6 +112,7 @@ app.get('/verify/:userId', async (req, res) => {
             return;
         }
 
+        // Update the user's isVerified field after clicking the verification link
         user.isVerified = true;
         await user.save();
 
@@ -115,6 +122,7 @@ app.get('/verify/:userId', async (req, res) => {
     }
 });
 
+
 // Serve the index.html file from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -122,7 +130,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 async function fetchData() {
     try {
         const users = await User.find();
-        console.log('Fetched users:', users.length);
+        console.log('Fetched users:', users);
     } catch (error) {
         console.error('Error fetching data:', error);
     }
