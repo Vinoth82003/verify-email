@@ -41,14 +41,14 @@ app.post('/register', async (req, res) => {
     }
 
     // Hash the password
-    const hashedPassword = await bcrypt.hash(req.body.password, 10); // 10 is the saltRounds
+    // const hashedPassword = await bcrypt.hash(req.body.password, 10); // 10 is the saltRounds
 
     // Create a new user
     const user = new User({
         firstName: req.body.fname,
         lastName: req.body.lname,
         email: req.body.email,
-        password: hashedPassword
+        password: req.body.password
     });
 
     try {
